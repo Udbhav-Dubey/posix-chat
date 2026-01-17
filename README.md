@@ -1,26 +1,31 @@
 # posix-chat
 
-This repository is a learning-focused POSIX networking project written in C++.  
+This repository is a learning-focused POSIX networking project written in C++.
+
 It contains multiple chat implementations built while progressively learning Unix socket programming — starting from simple blocking servers to a fully event-driven, poll-based chat system.
 
-This is **not a production chat application**.  
+This is **not a production chat application**.
+
 It is a systems programming exercise meant to understand how real networked programs handle multiple I/O sources efficiently.
 
 ---
 
 ## Repository Structure
 
-├── blocking
-│ ├── client_server_basic
-│ │ ├── client.cpp
-│ │ └── server.cpp
-│ └── two_way_comms
-│ ├── client.cpp
-│ └── server.cpp
-├── poll_based
-│ ├── client.cpp
-│ └── server.cpp
+```
+.
+├── blocking/
+│   ├── client_server_basic/
+│   │   ├── client.cpp
+│   │   └── server.cpp
+│   └── two_way_comms/
+│       ├── client.cpp
+│       └── server.cpp
+├── poll_based/
+│   ├── client.cpp
+│   └── server.cpp
 └── README.md
+```
 
 ---
 
@@ -31,13 +36,16 @@ This directory contains early learning code written while first understanding PO
 These programs use **blocking I/O** and handle one client or one operation at a time. The server blocks on calls like `accept()`, `recv()`, or `send()`, meaning it cannot respond to anything else while waiting.
 
 ### Characteristics
+
 - Blocking `accept`, `recv`, and `send`
 - One client at a time
 - Sequential control flow
 - Simple request/response behavior
 
 ### Purpose
+
 This code exists intentionally to show:
+
 - how basic TCP client/server communication works
 - why blocking I/O quickly becomes limiting
 - what problems arise when a server can only wait on one file descriptor
@@ -51,6 +59,7 @@ These implementations are kept as a reference point to understand *why* event-dr
 This is the main part of the repository.
 
 It implements a **multi-client chat room** using:
+
 - `poll(2)` for I/O multiplexing
 - non-blocking sockets (`fcntl`)
 - a single-threaded event loop
@@ -65,6 +74,7 @@ Both the server and the client are event-driven.
 Real systems rarely wait on a single thing.
 
 A server may need to:
+
 - accept new connections
 - read from multiple clients
 - write to slow clients
@@ -74,6 +84,7 @@ A server may need to:
 Blocking on one operation makes this impossible.
 
 `poll` allows a program to:
+
 - wait on multiple file descriptors simultaneously
 - react only when something is ready
 - avoid busy-waiting
@@ -101,10 +112,12 @@ This model closely resembles how real servers (web servers, proxies, databases, 
 ## How the poll-based client works
 
 The client also uses `poll` to handle two inputs at the same time:
+
 - `STDIN` (user typing)
 - the server socket
 
 This allows:
+
 - sending messages without blocking on server responses
 - receiving messages immediately while typing
 - a responsive, real-time chat experience without threads
@@ -114,11 +127,13 @@ This allows:
 ## What this project is (and is not)
 
 This project **is**:
+
 - a systems programming learning exercise
 - a clean demonstration of blocking vs event-driven I/O
 - a practical introduction to I/O multiplexing
 
 This project **is not**:
+
 - a production-ready chat system
 - performance-optimized
 - using `epoll` or `kqueue` (natural next steps)
@@ -134,4 +149,6 @@ g++ server.cpp -o server
 
 # Client
 g++ client.cpp -o client
-./client IP(use 127.0.0.1 for local) 9669
+./client <IP> <PORT>
+# Use 127.0.0.1 for local connections, default port is 9669
+```
