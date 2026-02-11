@@ -147,7 +147,7 @@ while(true){
             }
             else {
             for (int j=0;j<poll_fds.size();j++){
-                if (pfd.fd==polml_fds[j].fd || pfd.fd==sockfd){
+                if (pfd.fd==poll_fds[j].fd || pfd.fd==sockfd){
                     continue;
                 }
                 else {
